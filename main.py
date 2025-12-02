@@ -14,41 +14,33 @@ tasks_description={}
 
 
 
-def Pending_Tasks_List():
-    print("Pending Tasks List :-\n\n")
-    print("Task ID",10*" ","Task Name",30*" ","Task Description")
+def print_tasks_list(list,type):
+    # type=False -> Pending Tasks List
+    # type=True -> Completed Tasks List
+    if not type:
+     print("Pending Tasks List :-\n\n")
+    else :
+     print("Completed Tasks List :-\n\n")
+
+    #print("Task ID",10*" ","Task Name",30*" ","Task Description")
+
+    print(f"{'Task ID':<20}{'Task Name':<40}",'Task Description')
     print(150 * "-")
 
-    global pending_tasks
+
     new_list=[]
-    for id in pending_tasks:
-        if is_deleted[id]==False and is_completed[id]==False:
-            print(id, (17-len(str(id)))*" ", tasks_name[id],(39-len(tasks_name[id]))*" ", tasks_description[id])
+    for id in list:
+        if not is_deleted[id] and is_completed[id] == type:
+            print(f"{id:<20}{tasks_name[id]:<40}", tasks_description[id])
+            print(id)
             new_list.append(id)
 
-    pending_tasks=new_list
-    print("\n")
-
-
-
-def Completed_Tasks_List():
-    print("Completed Tasks List :-\n\n")
-    print("Task ID",10*" ","Task Name",30*" ","Task Description")
-    print(150*"-")
-
-    global completed_tasks
-    new_list = []
-    for id in completed_tasks:
-        if is_deleted[id] == False and is_completed[id] == True:
-            print(id, (17-len(str(id)))*" ", tasks_name[id],(39-len(tasks_name[id]))*" ", tasks_description[id])
-            new_list.append(id)
-
-    completed_tasks = new_list
+    list[:]=new_list
     print("\n")
 
 
 #1
-def Task_List():
+def task_list():
     print("Enter one of these by first character:-")
     print("a. Show Pending Tasks List.")
     print("b. Show Completed Tasks List.")
@@ -57,24 +49,35 @@ def Task_List():
     x=str(input("-->"))
     print('\n\n')
     if x=='a' :
-        Pending_Tasks_List()
+        print_tasks_list(pending_tasks,False)
     elif x=='b':
-        Completed_Tasks_List()
+        print_tasks_list(completed_tasks,True)
     elif x=='c':
-        Pending_Tasks_List()
-        Completed_Tasks_List()
+        print_tasks_list(pending_tasks,False)
+        print_tasks_list(completed_tasks,True)
     elif x=='0':
         return
     else :
         print("it's wrong input please try again :")
-        Task_List()
+        task_list()
 
 
 
 #2
-def Add_Task():
+def add_task():
+
+
     new_task_name=str(input("Enter the name of new task :\n"))
+    if len(new_task_name)==0:
+        print('it\'s empty enter try again:-')
+        add_task()
+
     new_task_description=str(input("Enter the description of new task :\n"))
+
+    if len(new_task_description)==0:
+        print('it\'s empty enter try again:-')
+        add_task()
+
     global available_id
     pending_tasks.append(available_id)
     is_deleted[available_id]=False
@@ -87,7 +90,7 @@ def Add_Task():
 
 
 #3
-def Mark_Task():
+def mark_task():
     id=int(input("Enter task ID to mark as completed:\n-->"))
     print('\n\n')
     if id>=available_id or id<=0 or is_deleted[id]:
@@ -98,7 +101,7 @@ def Mark_Task():
     return
 
 #4
-def Delete_Task():
+def delete_task():
     id = int(input("Enter task ID to delete:\n-->"))
     print('\n\n')
     if id>=available_id or id<=0 or is_deleted[id]:
@@ -114,24 +117,24 @@ def Delete_Task():
 
 print("-----------------Command Line Interface------------------\n\n")
 
-while(1):
+while(True):
     print("Enter one of these by first character:-\n")
     print("1. Show Tasks Lists.")
     print("2. Add Task.")
     print("3. Mark Task As Completed.")
     print("4. Delete Task.")
     print("5. Exit.\n")
-    x=int(input("-->"))
+    choice=int(input("-->"))
     print('\n\n')
-    if x==1 :
-        Task_List()
-    elif x==2:
-        Add_Task()
-    elif x==3:
-        Mark_Task()
-    elif x==4:
-        Delete_Task()
-    elif x==5:
+    if choice==1 :
+        task_list()
+    elif choice==2:
+        add_task()
+    elif choice==3:
+        mark_task()
+    elif choice==4:
+        delete_task()
+    elif choice==5:
         break
     else :
         print("it's wrong input please try again.\n")
