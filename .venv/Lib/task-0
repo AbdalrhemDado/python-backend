@@ -1,2 +1,0 @@
-user_name=input("write your name here : ")
-print (user_name);
