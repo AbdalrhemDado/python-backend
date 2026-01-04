@@ -1,22 +1,11 @@
-#int list
-from unittest import expectedFailure
+from Task import Task
 
-pending_tasks =[]
-completed_tasks=[]
-
+pending_tasks= {}
+completed_tasks= {}
 available_id=1
-
-#boolean dict
-is_completed={}
-
-#str dict
-tasks_name={}
-tasks_description={}
 
 
 def print_tasks_list(list,type):
-    # type="pending" -> Pending Tasks List
-    # type="complete" -> Completed Tasks List
     if type=="pending":
      print("Pending Tasks List :-\n\n")
     else :
@@ -25,13 +14,9 @@ def print_tasks_list(list,type):
     print(f"{'Task ID':<20}{'Task Name':<40}",'Task Description')
     print(150 * "-")
 
-    new_list=[]
-    for id in list:
-        if (id in is_completed) and (is_completed[id] == (type=='complete')):
-            print(f"{id:<20}{tasks_name[id]:<40}", tasks_description[id])
-            new_list.append(id)
+    for task in list.values():
+            print(task)
 
-    list[:]=new_list
     print("\n")
 
 #1
@@ -71,14 +56,11 @@ def add_task():
         print('it\'s empty enter try again:-')
         add_task()
 
-    global available_id
-    pending_tasks.append(available_id)
-    is_completed[available_id]=False
-    tasks_name[available_id]=new_task_name
-    tasks_description[available_id]=new_task_description
-    available_id+=1
-    return
 
+    global available_id
+    new_task = Task(available_id,new_task_name,new_task_description)
+    pending_tasks[available_id]=new_task
+    available_id+=1
 
 
 #3
@@ -88,13 +70,13 @@ def mark_task():
     except:
       print("invalid input\n")
       return
-    if id not in is_completed:
-      print("This task does not exist.\n")
+
+    if id not in pending_tasks:
+      print("This task does not exist or has already been completed.\n")
       return
 
-    is_completed[id]=True
-    completed_tasks.append(id)
-    return
+    completed_tasks[id]=pending_tasks.pop(id)
+
 
 #4
 def delete_task():
@@ -106,17 +88,18 @@ def delete_task():
        return
 
     print('\n\n')
-    if id not in is_completed:
+    if id in pending_tasks:
+        del pending_tasks[id]
+    elif id in completed_tasks:
+        del completed_tasks[id]
+    else :
         print("This task does not exist.\n")
-        return
 
-    del is_completed[id]
-    del tasks_name[id]
-    del tasks_description[id]
     return
 
 
-print("-----------------Command Line Interface------------------\n\n")
+
+print(12*"-","Command Line Interface",12*"-","\n\n")
 
 while(True):
     print("Enter one of these by first character:-\n")
@@ -146,5 +129,5 @@ while(True):
         print("it's wrong input please try again.\n")
 
 
-
-print("\n\n--------------The Command Line Interface has been Closed--------------\n")
+print("\n")
+print(12*"-","The Command Line Interface has been Closed",12*"-")
